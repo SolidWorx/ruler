@@ -1,4 +1,10 @@
 <?php
+/*
+ * This file is part of the ruler project.
+ *
+ * @author     Pierre du Plessis <pdples@gmail.com>
+ * @copyright  Copyright (c) 2016
+ */
 
 namespace Ruler;
 
@@ -48,7 +54,7 @@ final class Ruler
      * @return mixed
      * @throws \Exception
      */
-    public function process($context)
+    public function decide($context)
     {
         $visitor = new ClosureExpressionVisitor;
 
@@ -56,7 +62,6 @@ final class Ruler
             $expression = $rule->getExpression();
 
             if ($expression instanceof Expression) {
-
                 if (null === $this->el) {
                     $this->el = new ExpressionLanguage();
                 }

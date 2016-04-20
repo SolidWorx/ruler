@@ -6,9 +6,11 @@
  * @copyright  Copyright (c) 2016
  */
 
-namespace Ruler\Exception;
+namespace Ruler\Symfony;
 
-class InvalidRuleException extends \Exception
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+class RulerBundle extends Bundle
 {
 
 }
