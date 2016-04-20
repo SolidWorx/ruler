@@ -27,7 +27,7 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
         $context = ['someField' => 123];
 
-        $this->assertSame('abc', $ruler->process($context));
+        $this->assertSame('abc', $ruler->decide($context));
     }
 
     public function testNestedArrayRules()
@@ -40,7 +40,7 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
         $context = ['someField' => ['other' => 'testing']];
 
-        $this->assertSame('abc', $ruler->process($context));
+        $this->assertSame('abc', $ruler->decide($context));
     }
 
     public function testOrArrayRules()
@@ -53,7 +53,7 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
         $context = ['someField' => 'def'];
 
-        $this->assertSame('ghi', $ruler->process($context));
+        $this->assertSame('ghi', $ruler->decide($context));
     }
 
     public function testExpressionStringRules()
@@ -64,7 +64,7 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
         $context = ['someField' => ['other' => 'one']];
 
-        $this->assertSame('two', $ruler->process($context));
+        $this->assertSame('two', $ruler->decide($context));
     }
 
     public function testExpressionRules()
@@ -75,7 +75,7 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
         $context = ['someField' => (object) ['other' => 'six']];
 
-        $this->assertSame('seven', $ruler->process($context));
+        $this->assertSame('seven', $ruler->decide($context));
     }
 
     public function testNoRules()
@@ -93,7 +93,7 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
         $context = ['someField' => 'def'];
 
-        $ruler->process($context);
+        $ruler->decide($context);
     }
 
     public function testMultipleRules()
@@ -105,7 +105,7 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
         $context = ['someField' => 456];
 
-        $this->assertSame('DEF', $ruler->process($context));
+        $this->assertSame('DEF', $ruler->decide($context));
     }
 
     public function testCallback()
@@ -118,6 +118,6 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
         $context = ['someField' => 'abc'];
 
-        $this->assertSame(123, $ruler->process($context));
+        $this->assertSame(123, $ruler->decide($context));
     }
 }
