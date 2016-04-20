@@ -16,7 +16,7 @@ use Ruler\Visitor\ClosureExpressionVisitor;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-final class Ruler
+class Ruler
 {
     /**
      * @var ExpressionLanguage
@@ -57,8 +57,12 @@ final class Ruler
      * @return mixed
      * @throws \Exception
      */
-    public function decide($context)
+    public function decide($context = null)
     {
+        if (null === $context) {
+            $context = [];
+        }
+
         $visitor = new ClosureExpressionVisitor;
 
         foreach ($this->rules as $rule) {

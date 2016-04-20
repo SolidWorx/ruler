@@ -15,8 +15,11 @@ use Ruler\Ruler;
 use Ruler\Storage\ArrayStorage;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\Security\Core\Authorization as Security;
 
 class RulerExtension extends Extension
 {
@@ -57,9 +60,12 @@ class RulerExtension extends Extension
      */
     private function getRuleDefinition(array $rules)
     {
-        $definition = new Definition(Ruler::class);
+        $definition = new Definition(Ruler::class, [$this->getExpressionLanguage()]);
+        $definition->addTag('ruler.rule');
 
-        foreach ($rules as $rule) {
+        $defaultValue = $rules['default'];
+
+        foreach ($rules['conditions'] as $rule) {
             $value = $rule['value'];
 
             array_walk($value, function (&$value) {
@@ -75,6 +81,25 @@ class RulerExtension extends Extension
             $definition->addMethodCall('add', [$rule['expression'], $value]);
         }
 
+        if (null !== $defaultValue) {
+            $definition->addMethodCall('add', ['true', $defaultValue]);
+        }
+
+        $definition->addMethodCall('setContainer', [new Reference('service_container')]);
+
         return $definition;
+    }
+
+    /**
+     * @return Reference
+     */
+    private function getExpressionLanguage()
+    {
+        $providers = [
+            new Definition(DependencyInjection\ExpressionLanguageProvider::class),
+            new Definition(Security\ExpressionLanguageProvider::class),
+        ];
+
+        return new Definition(ExpressionLanguage::class, [null, $providers]);
     }
 }
