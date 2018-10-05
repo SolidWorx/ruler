@@ -1,12 +1,12 @@
 {
-    "name": "pierredup/ruler",
+    "name": "solidworx/ruler",
     "description": "A rule processing engine for PHP",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Pierre du Plessis",
-            "email": "pdples@gmail.com"
+            "email": "open-source@solidworx.co"
         }
     ],
     "require": {
