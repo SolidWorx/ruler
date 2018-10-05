@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ruler project.
  *
@@ -14,9 +16,9 @@ namespace Ruler\Symfony\DependencyInjection;
 
 use Ruler\Ruler;
 use Ruler\Storage\ArrayStorage;
+use Symfony\Component\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -27,7 +29,7 @@ class RulerExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -38,8 +40,10 @@ class RulerExtension extends Extension
     /**
      * @param array            $rules
      * @param ContainerBuilder $container
+     *
+     * @throws DependencyInjection\Exception\BadMethodCallException|DependencyInjection\Exception\InvalidArgumentException
      */
-    private function processRules(array $rules, ContainerBuilder $container)
+    private function processRules(array $rules, ContainerBuilder $container): void
     {
         $storageDefinition = new Definition(ArrayStorage::class);
 
@@ -58,8 +62,9 @@ class RulerExtension extends Extension
      * @param array $rules
      *
      * @return Definition
+     * @throws DependencyInjection\Exception\InvalidArgumentException
      */
-    private function getRuleDefinition(array $rules)
+    private function getRuleDefinition(array $rules): Definition
     {
         $definition = new Definition(Ruler::class, [$this->getExpressionLanguage()]);
         $definition->addTag('ruler.rule');
@@ -92,9 +97,9 @@ class RulerExtension extends Extension
     }
 
     /**
-     * @return Reference
+     * @return Definition
      */
-    private function getExpressionLanguage()
+    private function getExpressionLanguage(): Definition
     {
         $providers = [
             new Definition(DependencyInjection\ExpressionLanguageProvider::class),

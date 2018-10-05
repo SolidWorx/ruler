@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ruler project.
  *
@@ -12,6 +14,7 @@
 
 namespace Ruler;
 
+use Doctrine\Common\Collections\Expr\Expression as DoctrineExpression;
 use Ruler\Exception\InvalidRuleException;
 use Ruler\Visitor\ClosureExpressionVisitor;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -38,12 +41,12 @@ class Ruler
     private $rules;
 
     /**
-     * @param \Doctrine\Common\Collections\Expr\Expression|Expression|string $expression
-     * @param mixed                                                          $return
+     * @param DoctrineExpression|Expression|string $expression
+     * @param mixed                                $return
      *
      * @return Rule
      */
-    public function add($expression, $return)
+    public function add($expression, $return): Rule
     {
         if (is_string($expression)) {
             $expression = new Expression($expression);
@@ -56,7 +59,7 @@ class Ruler
      * @param mixed $context
      *
      * @return mixed
-     * @throws \Exception
+     * @throws InvalidRuleException|\RuntimeException
      */
     public function decide($context = null)
     {

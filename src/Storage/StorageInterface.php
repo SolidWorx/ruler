@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ruler project.
  *
@@ -16,18 +18,7 @@ use Ruler\Ruler;
 
 interface StorageInterface
 {
-    /**
-     * @param string $name
-     * @param Ruler  $ruler
-     *
-     * @return mixed
-     */
-    public function add($name, Ruler $ruler);
+    public function add(string $name, Ruler $ruler);
 
-    /**
-     * @param string $name
-     *
-     * @return Ruler
-     */
-    public function get($name);
+    public function get(string $name): Ruler;
 }

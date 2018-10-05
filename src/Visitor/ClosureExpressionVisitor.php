@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the ruler project.
  *
@@ -14,7 +16,9 @@ namespace Ruler\Visitor;
 
 use Doctrine\Common\Collections\Expr\ClosureExpressionVisitor as BaseVisitor;
 use Doctrine\Common\Collections\Expr\Comparison;
-use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+use Symfony\Component\PropertyAccess\Exception\AccessException;
+use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
+use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ClosureExpressionVisitor extends BaseVisitor
@@ -34,13 +38,15 @@ class ClosureExpressionVisitor extends BaseVisitor
 
         try {
             return $propertyAccess->getValue($object, $field);
-        } catch (NoSuchPropertyException $e) {
+        } catch (AccessException|InvalidArgumentException|UnexpectedTypeException $e) {
             return parent::getObjectFieldValue($object, $field);
         }
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \RuntimeException
      */
     public function walkComparison(Comparison $comparison)
     {
@@ -94,7 +100,7 @@ class ClosureExpressionVisitor extends BaseVisitor
                 };
 
             default:
-                throw new \RuntimeException("Unknown comparison operator: " . $comparison->getOperator());
+                throw new \RuntimeException("Unknown comparison operator: ".$comparison->getOperator());
         }
     }
 }
