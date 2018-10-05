@@ -19,6 +19,7 @@ use Ruler\Storage\ArrayStorage;
 use Symfony\Component\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -34,14 +35,17 @@ class RulerExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $this->processRules($config['rules'], $container);
+        try {
+            $this->processRules($config['rules'], $container);
+        } catch (Exception\BadMethodCallException | Exception\InvalidArgumentException $e) {
+        }
     }
 
     /**
      * @param array            $rules
      * @param ContainerBuilder $container
      *
-     * @throws DependencyInjection\Exception\BadMethodCallException|DependencyInjection\Exception\InvalidArgumentException
+     * @throws Exception\InvalidArgumentException|Exception\BadMethodCallException
      */
     private function processRules(array $rules, ContainerBuilder $container): void
     {
@@ -62,7 +66,7 @@ class RulerExtension extends Extension
      * @param array $rules
      *
      * @return Definition
-     * @throws DependencyInjection\Exception\InvalidArgumentException
+     * @throws Exception\InvalidArgumentException
      */
     private function getRuleDefinition(array $rules): Definition
     {
@@ -103,8 +107,11 @@ class RulerExtension extends Extension
     {
         $providers = [
             new Definition(DependencyInjection\ExpressionLanguageProvider::class),
-            new Definition(Security\ExpressionLanguageProvider::class),
         ];
+
+        if (class_exists(Security\ExpressionLanguageProvider::class)) {
+            $providers[] = new Definition(Security\ExpressionLanguageProvider::class);
+        }
 
         return new Definition(ExpressionLanguage::class, [null, $providers]);
     }

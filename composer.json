@@ -16,11 +16,13 @@
         "symfony/property-access": "^3.0 || ^4.0"
     },
     "suggest": {
-        "symfony/framework-bundle": "For Symfony integration"
+        "symfony/framework-bundle": "For Symfony integration",
+        "symfony/security": "To load security functions for expressions"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.3",
-        "symfony/framework-bundle": "^3,0 || ^4.0"
+        "symfony/framework-bundle": "^3,0 || ^4.0",
+        "symfony/security": "^3,0 || ^4.0"
     },
     "autoload": {
         "psr-4": {
