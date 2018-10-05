@@ -12,10 +12,11 @@
 namespace Test;
 
 use Doctrine\Common\Collections\ExpressionBuilder;
+use PHPUnit\Framework\TestCase;
 use Ruler\Ruler;
 use Symfony\Component\ExpressionLanguage\Expression;
 
-class RulerTest extends \PHPUnit_Framework_TestCase
+class RulerTest extends TestCase
 {
     public function testBasicArrayRules()
     {
@@ -80,12 +81,8 @@ class RulerTest extends \PHPUnit_Framework_TestCase
 
     public function testNoRules()
     {
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('Ruler\Exception\InvalidRuleException');
-            $this->expectExceptionMessage('No rules matched');
-        } else {
-            $this->setExpectedException('Ruler\Exception\InvalidRuleException', 'No rules matched');
-        }
+        $this->expectException('Ruler\Exception\InvalidRuleException');
+        $this->expectExceptionMessage('No rules matched');
 
         $ruler = new Ruler();
 
